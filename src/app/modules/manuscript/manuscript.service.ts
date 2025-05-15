@@ -63,6 +63,14 @@ const createManuscriptInfoDB = async (id: string, req: Request) => {
     audioUrl = await uploadInSpace(audioFile, "audioUrl");
   }
 
+  await prisma.notification.create({
+    data:{
+      userId: id,
+      title:"Manuscript Uploaded Successfully",
+      message: `${payload.title} is uploaded`
+    }
+  })
+
   const result = await prisma.manuscript.create({
     data: {
       ...payload,
@@ -130,7 +138,8 @@ const handleRecentSearch = async (searchTerm: string) => {
 const getManuscriptsFromDB = async (
   search?: string,
   category?: string,
-  email?: string
+  email?: string,
+  popular?: boolean
 ) => {
   if (search) {
     await handleRecentSearch(search);
@@ -147,6 +156,9 @@ const getManuscriptsFromDB = async (
       category: category ? (category as ManuscriptCategory) : undefined,
       user: email ? { email: email } : undefined,
     },
+    orderBy: popular
+      ? { sold: "desc" } 
+      : undefined, 
   });
 
   if (manuscripts.length === 0) {

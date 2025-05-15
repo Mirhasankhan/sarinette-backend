@@ -29,7 +29,7 @@ const loginUserIntoDB = async (payload: any) => {
   }
 
   const accessToken = jwtHelpers.generateToken(
-    user,
+    { id: user.id, email: user.email },
     config.jwt.jwt_secret as string,
     config.jwt.expires_in as string
   );
@@ -48,7 +48,6 @@ const socialLoginIntoDB = async (userName: string, email: string) => {
       email: email,
     },
   });
-
   let publicName = `@${userName.toLowerCase().replace(/\s+/g, "")}`;
 
   let existingPublicName = await prisma.user.findFirst({
@@ -64,19 +63,22 @@ const socialLoginIntoDB = async (userName: string, email: string) => {
     counter++;
   }
 
+  const password = Math.random().toString(36).slice(-8);
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   if (!user) {
     user = await prisma.user.create({
       data: {
         userName: userName,
         publicName: publicName,
         email: email,
-        password: "12Ab565@",
+        password: hashedPassword,
       },
     });
   }
 
   const accessToken = jwtHelpers.generateToken(
-    user,
+    {id:user.id, email: user.email},
     config.jwt.jwt_secret as string,
     config.jwt.expires_in as string
   );

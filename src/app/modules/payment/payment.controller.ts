@@ -3,12 +3,12 @@ import sendResponse from "../../../shared/sendResponse";
 import { payementServices } from "./payment.service";
 
 const handleCreatePaymentIntent = async (req: Request, res: Response) => {
-  const { amount,manuscriptId } = req.body;
+  const { manuscriptId } = req.body;
   const userId = req.user.id;
   const paymentData = await payementServices.createPaymentIntent(
     userId,
     manuscriptId,
-    amount
+    
     
   );
  

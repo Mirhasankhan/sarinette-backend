@@ -9,11 +9,12 @@ const router = express.Router();
 //login user
 router.post(
   "/login",
-  validateRequest(authValidation.authLoginSchema),
+
   authController.loginUser
 );
 router.post(
   "/socialLogin",
+  validateRequest(authValidation.authLoginSchema),
   authController.socialLogin
 );
 router.get("/profile", auth(), authController.getProfile);

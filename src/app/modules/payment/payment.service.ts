@@ -8,18 +8,18 @@ const stripe = new Stripe(config.stripe.stripe_secret as string);
 const createPaymentIntent = async (
   userId: string,
   manuscriptId: string,
-  amount: number
+ 
 ) => {
   return await prisma.$transaction(async (prisma) => {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100,
+      amount: 50 * 100,
       currency: "usd",
       payment_method_types: ["card"],
     });
 
     const paymentRecord = await prisma.payment.create({
       data: {
-        amount: amount,
+        amount: 50,
         currency: "usd",
         stripeId: paymentIntent.id,
         userId: userId,

@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const authLoginSchema = z.object({
   email: z.string().email("Invalid email address"),
+  userName: z.string().min(2,"User Name must be at least 2 characters")
 });
 
 const updateProfileSchema = z.object({

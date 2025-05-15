@@ -14,11 +14,12 @@ const createManuscript = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getManuscripts = catchAsync(async (req: Request, res: Response) => {
-  const { search, category,email } = req.query;
+  const { search, category,email,popular } = req.query;
   const result = await manuscriptService.getManuscriptsFromDB(
     search as string,
     category as string,
-    email as string
+    email as string,
+    popular as boolean | undefined
   );
   sendResponse(res, {
     success: true,
